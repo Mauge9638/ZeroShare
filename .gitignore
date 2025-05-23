@@ -12,6 +12,7 @@
 *.nuget.targets
 packages/
 *.lock.json
+appsettings.Development.json
 
 # Node.js
 node_modules/
