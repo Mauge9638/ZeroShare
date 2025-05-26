@@ -15,17 +15,37 @@
       />
       <label class="cursor-pointer" for="burnAfterRead">Delete the text after first read</label>
     </div>
-    <div class="flex items-center ps-4 border border-slate-700 rounded-lg p-4 space-x-2">
+    <div class="flex flex-row items-center ps-4 border border-slate-700 rounded-lg p-4 space-x-2">
       <label class="cursor-pointer" for="expiresAtDate">Expires at</label>
-      <input
+      <!-- <input
         id="expiresAtDate"
         type="date"
         v-model="expiresAtDate"
         @change="checkIfExpiresAtIsValid"
-      />
+      /> -->
+      <VueDatePicker
+        id="expiresAtDate"
+        :min-date="new Date()"
+        is-24
+        time-picker-inline
+        hide-input-icon
+        v-model="expiresAtDate"
+      >
+        <template #trigger>
+          <input
+            id="expiresAtDate"
+            type="text"
+            :value="expiresAtDate?.toISOString().slice(0, 16).replace('T', ' ') || ''"
+          />
+        </template>
+      </VueDatePicker>
       <button
-        v-if="expiresAtDate"
-        class="bg-red-500 text-slate-200 hover:bg-red-4000 hover:text-slate-100 border-2 border-slate-700 p-2 rounded-lg cursor-pointer"
+        class="p-2 rounded-lg"
+        :class="[
+          expiresAtDate
+            ? 'bg-red-500 text-slate-200 hover:bg-red-400 hover:text-slate-100 cursor-pointer active:scale-80 transition-all duration-200 ease-in-out border-2 border-slate-700'
+            : 'bg-red-500/20 text-slate-200/20 cursor-not-allowed border-2 border-slate-700/0',
+        ]"
         @click="expiresAtDate = null"
       >
         Reset
@@ -33,7 +53,7 @@
     </div>
 
     <button
-      class="bg-slate-800 text-sky-600 hover:text-sky-500 hover:bg-slate-700 border-2 border-slate-700 hover:border-slate-800 px-5 py-2 rounded-lg cursor-pointer"
+      class="bg-slate-800 text-sky-600 hover:text-sky-500 hover:bg-slate-700 border-2 border-slate-700 hover:border-slate-800 px-5 py-2 rounded-lg cursor-pointer active:scale-80 transition-all duration-200 ease-in-out"
       type="submit"
       @click="processText"
       :disabled="textToShare.trim().length <= 0"
@@ -42,26 +62,27 @@
     </button>
     <div
       v-if="shareableLink"
-      class="p-4 bg-slate-700 rounded-md w-1/2 flex flex-row justify-between items-center"
+      class="p-4 bg-slate-700 rounded-md w-1/2 flex flex-row justify-between items-start"
     >
-      <div>
+      <div class="text-clip overflow-auto wrap-anywhere max-h-52">
         {{ shareableLink }}
       </div>
       <button
-        class="bg-slate-800 text-sky-600 hover:text-sky-500 hover:bg-slate-700 border-2 border-slate-700 hover:border-slate-800 px-5 py-2 rounded-lg cursor-pointer"
+        class="bg-slate-800 text-sky-600 hover:text-sky-500 hover:bg-slate-700 border-2 border-slate-700 hover:border-slate-800 px-5 py-2 rounded-lg cursor-pointer active:scale-80 transition-all duration-200 ease-in-out"
         type="button"
         @click="copyShareableLinkToClipboard"
       >
         Copy
       </button>
     </div>
-    <div v-if="errorText" class="p-4 bg-red-500 rounded-md w-1/2">{{ errorText }}</div>
+    <div v-if="errorText" class="p-4 bg-red-500 font-bold rounded-md w-1/2">{{ errorText }}</div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { arrayBufferToBase64, uint8ArrayToBase64 } from '@/utils/toStringHelpers'
 import { ref, watch } from 'vue'
+import VueDatePicker from '@vuepic/vue-datepicker'
 
 const textToShare = ref<string>('')
 const burnAfterRead = ref<boolean>(false)

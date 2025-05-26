@@ -2,38 +2,33 @@ using Microsoft.EntityFrameworkCore;
 using Backend.Models;
 namespace Backend.Data
 {
-    public class SnippetContentContext : DbContext
+    public class SnippetContext(DbContextOptions<SnippetContext> options) : DbContext(options)
     {
-        public SnippetContentContext(DbContextOptions<SnippetContentContext> options)
-            : base(options)
-        {
-        }
-
-        public DbSet<SnippetContent> SnippetContent { get; set; }
+        public DbSet<Snippet> Snippet { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<SnippetContent>()
+            modelBuilder.Entity<Snippet>()
                 .Property(s => s.Content)
                 .IsRequired();
 
-            modelBuilder.Entity<SnippetContent>()
+            modelBuilder.Entity<Snippet>()
                 .Property(s => s.ContentId)
                 .IsRequired();
 
-            modelBuilder.Entity<SnippetContent>()
+            modelBuilder.Entity<Snippet>()
                 .Property(s => s.IV)
                 .IsRequired();
 
-            modelBuilder.Entity<SnippetContent>()
+            modelBuilder.Entity<Snippet>()
                 .Property(s => s.BurnAfterRead)
                 .HasDefaultValue(false);
 
-            modelBuilder.Entity<SnippetContent>()
+            modelBuilder.Entity<Snippet>()
                 .Property(s => s.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-            modelBuilder.Entity<SnippetContent>()
+            modelBuilder.Entity<Snippet>()
                 .Property(s => s.ExpiresAt)
                 .IsRequired(false);
         }

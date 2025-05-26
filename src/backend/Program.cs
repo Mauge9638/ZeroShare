@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Backend.Data;
+using Backend.Services;
+using Backend.Repositories;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,9 +18,14 @@ if (string.IsNullOrEmpty(dbConnectionString))
     throw new InvalidOperationException("Database connection string is not configured.");
 }
 
-builder.Services.AddDbContext<SnippetContentContext>(options =>
+builder.Services.AddDbContext<SnippetContext>(options =>
     options.UseNpgsql(dbConnectionString).UseSnakeCaseNamingConvention()
     );
+
+builder.Services.AddScoped<ISnippetRepository, SnippetRepository>();
+builder.Services.AddScoped<ISnippetService, SnippetService>();
+builder.Services.AddHostedService<SnippetCleanupService>();
+
 
 var app = builder.Build();
 

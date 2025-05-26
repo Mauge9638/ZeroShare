@@ -1,6 +1,6 @@
 namespace Backend.Models;
 
-public class SnippetContent
+public class Snippet
 {
     public int Id { get; set; }
     public required string Content { get; set; }
@@ -10,8 +10,8 @@ public class SnippetContent
     public DateTime CreatedAt { get; set; }
     public DateTime? ExpiresAt { get; set; } = null;
 
-    public SnippetContent() { }
-    public SnippetContent(
+    public Snippet() { }
+    public Snippet(
         string content,
         string contentId,
         string iv,
@@ -29,15 +29,15 @@ public class SnippetContent
 
 }
 
-public class SnippetContentDTO
+public class SnippetDTO
 {
     public required string Content { get; set; }
     public required string IV { get; set; }
     public bool BurnAfterRead { get; set; } = false;
     public DateTime? ExpiresAt { get; set; } = null;
 
-    public SnippetContentDTO() { }
-    public SnippetContentDTO(string content, string iv, bool burnAfterRead, DateTime? expiresAt)
+    public SnippetDTO() { }
+    public SnippetDTO(string content, string iv, bool burnAfterRead, DateTime? expiresAt)
     {
         Content = content;
         IV = iv;
@@ -46,11 +46,11 @@ public class SnippetContentDTO
     }
 
     [System.Diagnostics.CodeAnalysis.SetsRequiredMembers]
-    public SnippetContentDTO(SnippetContent snippetContent)
+    public SnippetDTO(Snippet snippet)
     {
-        Content = snippetContent.Content;
-        IV = snippetContent.IV;
-        BurnAfterRead = snippetContent.BurnAfterRead;
-        ExpiresAt = snippetContent.ExpiresAt;
+        Content = snippet.Content;
+        IV = snippet.IV;
+        BurnAfterRead = snippet.BurnAfterRead;
+        ExpiresAt = snippet.ExpiresAt;
     }
 }
