@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 
 input,
-textarea {
+textarea,
+pre {
   @apply bg-slate-800 resize-none border-2 border-slate-700 rounded-lg p-2 outline-none focus:ring-1 focus:ring-slate-600;
 }

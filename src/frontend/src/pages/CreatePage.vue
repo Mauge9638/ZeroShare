@@ -13,16 +13,10 @@
         v-model="burnAfterRead"
         class="cursor-pointer"
       />
-      <label class="cursor-pointer" for="burnAfterRead">Delete the text after first read</label>
+      <label class="cursor-pointer" for="burnAfterRead">Delete the snippet after first read</label>
     </div>
     <div class="flex flex-row items-center ps-4 border border-slate-700 rounded-lg p-4 space-x-2">
-      <label class="cursor-pointer" for="expiresAtDate">Expires at</label>
-      <!-- <input
-        id="expiresAtDate"
-        type="date"
-        v-model="expiresAtDate"
-        @change="checkIfExpiresAtIsValid"
-      /> -->
+      <label class="cursor-pointer min-w-fit" for="expiresAtDate">Expires at</label>
       <VueDatePicker
         id="expiresAtDate"
         :min-date="new Date()"
@@ -53,27 +47,32 @@
     </div>
 
     <button
-      class="bg-slate-800 text-sky-600 hover:text-sky-500 hover:bg-slate-700 border-2 border-slate-700 hover:border-slate-800 px-5 py-2 rounded-lg cursor-pointer active:scale-80 transition-all duration-200 ease-in-out"
+      class="border-2 px-5 py-2 rounded-lg"
+      :class="[
+        canCreateSnippet
+          ? 'bg-slate-800 text-sky-600 border-slate-700 hover:text-sky-500 hover:bg-slate-700 hover:border-slate-800 cursor-pointer active:scale-80 transition-all duration-200 ease-in-out'
+          : ' bg-slate-800/50 text-sky-600/50 border-slate-700/50 cursor-not-allowed',
+      ]"
       type="submit"
-      @click="processText"
-      :disabled="textToShare.trim().length <= 0"
+      @click="processSnippet"
+      :disabled="!canCreateSnippet"
     >
       Create
     </button>
-    <div
-      v-if="shareableLink"
-      class="p-4 bg-slate-700 rounded-md w-1/2 flex flex-row justify-between items-start"
-    >
-      <div class="text-clip overflow-auto wrap-anywhere max-h-52">
-        {{ shareableLink }}
+    <div v-if="shareableLink" class="flex flex-col w-1/2 space-y-2 text-center">
+      Share the url below with anyone to read your snippet.
+      <div class="p-4 bg-slate-700 rounded-md flex flex-row justify-between items-start">
+        <div class="text-clip overflow-auto wrap-anywhere max-h-52">
+          {{ shareableLink }}
+        </div>
+        <button
+          class="bg-slate-800 text-sky-600 hover:text-sky-500 hover:bg-slate-700 border-2 border-slate-700 hover:border-slate-800 px-5 py-2 rounded-lg cursor-pointer active:scale-80 transition-all duration-200 ease-in-out"
+          type="button"
+          @click="copyShareableLinkToClipboard"
+        >
+          Copy
+        </button>
       </div>
-      <button
-        class="bg-slate-800 text-sky-600 hover:text-sky-500 hover:bg-slate-700 border-2 border-slate-700 hover:border-slate-800 px-5 py-2 rounded-lg cursor-pointer active:scale-80 transition-all duration-200 ease-in-out"
-        type="button"
-        @click="copyShareableLinkToClipboard"
-      >
-        Copy
-      </button>
     </div>
     <div v-if="errorText" class="p-4 bg-red-500 font-bold rounded-md w-1/2">{{ errorText }}</div>
   </div>
@@ -81,16 +80,15 @@
 
 <script setup lang="ts">
 import { arrayBufferToBase64, uint8ArrayToBase64 } from '@/utils/toStringHelpers'
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import VueDatePicker from '@vuepic/vue-datepicker'
+import { snippetsApi, type CreateSnippetRequest } from '@/api/requests'
 
 const textToShare = ref<string>('')
 const burnAfterRead = ref<boolean>(false)
 const expiresAtDate = ref<Date | null>(null)
 
 const errorText = ref<string | null>(null)
-const userKeyOutput = ref<string | null>(null)
-const serverPayload = ref<{ ciphertext: string; iv: string } | null>(null)
 const shareableLink = ref<string | null>(null)
 const isLoading = ref<boolean>(false)
 
@@ -99,21 +97,28 @@ watch(
   () => {
     if (burnAfterRead.value && expiresAtDate.value) {
       errorText.value =
-        'You can only select one option: "Delete text after first read" or "Expires at".'
+        'You can only select one option: "Delete snippet after first read" or "Expires at".'
     } else {
       errorText.value = null
     }
   },
 )
 
+const canCreateSnippet = computed(() => {
+  checkIfExpiresAtIsValid()
+  return textToShare.value.trim().length > 0 && !errorText.value
+})
+
 const checkIfExpiresAtIsValid = () => {
-  console.log('checkIfExpiresAtIsValid', expiresAtDate.value)
-  const today = new Date()
+  const currentTime = new Date().getTime()
+  const expiresAtTime = expiresAtDate.value?.getTime() || 0
   if (!expiresAtDate.value) {
     errorText.value = null
     return
   }
-  if (expiresAtDate.value < today) {
+  if (expiresAtTime - currentTime < 60000) {
+    errorText.value = 'The selected date must be at least 1 minute in the future.'
+  } else if (expiresAtTime < currentTime) {
     errorText.value = 'The selected date is in the past. Please select a future date.'
   } else {
     errorText.value = null
@@ -131,11 +136,9 @@ const copyShareableLinkToClipboard = async () => {
   }
 }
 
-const processText = async () => {
+const processSnippet = async () => {
   isLoading.value = true
   if (!textToShare.value.trim()) {
-    userKeyOutput.value = null
-    serverPayload.value = null
     return
   }
 
@@ -146,20 +149,17 @@ const processText = async () => {
     const encoder = new TextEncoder()
     const dataToEncrypt = encoder.encode(text)
 
-    // 1. Generate IV
-    const iv = crypto.getRandomValues(new Uint8Array(24)) // AES-GCM recommended IV size is 12 bytes
+    const iv = crypto.getRandomValues(new Uint8Array(24))
 
-    // 2. Generate Key
     const generatedKey = await subtleCrypto.generateKey(
       {
         name: 'AES-GCM',
         length: 256,
       },
-      true, // exportable
+      true,
       ['encrypt', 'decrypt'],
     )
 
-    // 3. Encrypt the data
     const encryptedArrayBuffer = await subtleCrypto.encrypt(
       {
         name: 'AES-GCM',
@@ -169,32 +169,35 @@ const processText = async () => {
       dataToEncrypt,
     )
 
-    // 4. Export the key for the user
     const exportedKeyJwk = await subtleCrypto.exportKey('jwk', generatedKey)
     if (!exportedKeyJwk.k) {
       throw new Error('Failed to export key')
     }
-    userKeyOutput.value = exportedKeyJwk.k
+    const key = exportedKeyJwk.k
 
-    // 5. Prepare data for the server
     const encryptedTextBase64 = arrayBufferToBase64(encryptedArrayBuffer)
     const ivBase64 = uint8ArrayToBase64(iv) // Convert IV to Base64
 
-    serverPayload.value = {
-      ciphertext: encryptedTextBase64,
-      iv: ivBase64, // Include IV with the ciphertext
+    const createObject: CreateSnippetRequest = {
+      content: encryptedTextBase64,
+      iv: ivBase64,
+      burnAfterRead: burnAfterRead.value,
     }
-    shareableLink.value = 'https://example.com/share/' + encryptedTextBase64
+    if (expiresAtDate.value) {
+      createObject.expiresAt = expiresAtDate.value
+    }
 
-    // For demonstration, you might log it:
-    console.log('User Key (JWK):', userKeyOutput.value)
-    console.log('Server Payload:', serverPayload.value)
+    // Get the snippet ID from the server response
+    const snippetId = await snippetsApi.create(createObject)
+
+    shareableLink.value = `${window.location.origin}/view/${snippetId}#${key}`
+
+    textToShare.value = ''
+    errorText.value = null
   } catch (error) {
     console.error('Encryption failed:', error)
     errorText.value =
       'Error during encryption. Try again or check console and create an issue on GitHub.'
-    userKeyOutput.value = null
-    serverPayload.value = null
   } finally {
     isLoading.value = false
   }
