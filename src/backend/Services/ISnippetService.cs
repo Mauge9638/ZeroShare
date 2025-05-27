@@ -5,7 +5,7 @@ namespace Backend.Services
 {
     public interface ISnippetService
     {
-        Task<SnippetDTO?> GetSnippetAsync(string contentId);
+        Task<SnippetViewDTO?> GetSnippetAsync(string contentId);
         Task<(string contentId, SnippetDTO snippet)> CreateSnippetAsync(SnippetDTO snippetDTO);
 
         Task<bool> DeleteSnippetAsync(string contentId);

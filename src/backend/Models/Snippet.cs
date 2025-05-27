@@ -54,3 +54,29 @@ public class SnippetDTO
         ExpiresAt = snippet.ExpiresAt;
     }
 }
+
+public class SnippetViewDTO
+{
+    public required string Content { get; set; }
+    public required string IV { get; set; }
+
+    public SnippetViewDTO() { }
+    public SnippetViewDTO(string content, string iv)
+    {
+        Content = content;
+        IV = iv;
+    }
+
+    [System.Diagnostics.CodeAnalysis.SetsRequiredMembers]
+    public SnippetViewDTO(Snippet snippet)
+    {
+        Content = snippet.Content;
+        IV = snippet.IV;
+    }
+    [System.Diagnostics.CodeAnalysis.SetsRequiredMembers]
+    public SnippetViewDTO(SnippetDTO snippetDTO)
+    {
+        Content = snippetDTO.Content;
+        IV = snippetDTO.IV;
+    }
+}

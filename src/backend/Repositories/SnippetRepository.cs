@@ -11,7 +11,8 @@ namespace Backend.Repositories
         public async Task<Snippet?> GetByContentIdAsync(string contentId)
         {
             return await _context.Snippet
-                .FirstOrDefaultAsync(s => s.ContentId == contentId);
+                .FirstOrDefaultAsync(s => s.ContentId == contentId &&
+                                          (s.ExpiresAt == null || s.ExpiresAt > DateTime.UtcNow));
         }
 
         public async Task<Snippet> CreateAsync(Snippet snippet)

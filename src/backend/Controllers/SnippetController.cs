@@ -17,7 +17,7 @@ public class SnippetController(ILogger<SnippetController> logger, ISnippetServic
     {
         try
         {
-            SnippetDTO? snippetDTO = await _snippetService.GetSnippetAsync(contentId);
+            SnippetViewDTO? snippetDTO = await _snippetService.GetSnippetAsync(contentId);
             if (snippetDTO == null)
             {
                 return NotFound($"Snippet with ContentId '{contentId}' not found.");

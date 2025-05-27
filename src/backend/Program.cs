@@ -12,6 +12,36 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 
+// Environment-specific CORS configuration
+if (builder.Environment.IsDevelopment())
+{
+    // Development: Allow localhost origins
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowFrontend", policy =>
+        {
+            policy.WithOrigins("http://localhost:5173")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials(); // Might need this for dev tools
+        });
+    });
+}
+else
+{
+    // Production: Allow specific domains
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowFrontend", policy =>
+        {
+            policy.WithOrigins("https://zeroshare.app", "https://www.zeroshare.app")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+
+        });
+    });
+}
+
 var dbConnectionString = builder.Configuration.GetConnectionString("DbConnection");
 if (string.IsNullOrEmpty(dbConnectionString))
 {
@@ -42,6 +72,8 @@ if (app.Environment.IsDevelopment())
 // app.UseHttpsRedirection();
 
 // app.UseAuthorization();
+
+app.UseCors("AllowFrontend");
 
 app.MapControllers();
 

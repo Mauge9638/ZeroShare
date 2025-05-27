@@ -12,7 +12,7 @@ namespace Backend.Services
         private readonly ISnippetRepository _repository = repository;
         private readonly ILogger<SnippetService> _logger = logger;
 
-        public async Task<SnippetDTO?> GetSnippetAsync(string contentId)
+        public async Task<SnippetViewDTO?> GetSnippetAsync(string contentId)
         {
             Snippet? snippet = await _repository.GetByContentIdAsync(contentId);
             if (snippet == null)
@@ -24,7 +24,7 @@ namespace Backend.Services
                 await _repository.DeleteAsync(contentId);
             }
 
-            return new SnippetDTO(snippet);
+            return new SnippetViewDTO(snippet);
         }
 
         public async Task<(string contentId, SnippetDTO snippet)> CreateSnippetAsync(SnippetDTO snippetDTO)
@@ -43,10 +43,8 @@ namespace Backend.Services
                 ExpiresAt = snippetDTO.ExpiresAt
             };
 
-            // Save to database
             await _repository.CreateAsync(snippet);
 
-            // Return the result
             return (contentId, new SnippetDTO(snippet));
         }
 
