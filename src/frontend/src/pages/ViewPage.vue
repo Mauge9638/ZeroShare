@@ -4,6 +4,29 @@
       {{ error }}
     </div>
 
+    <template v-if="!isLoading && !decryptedText">
+      <div class="flex flex-row items-center space-x-3">
+        <label class="w-24" for="contentIdInput">Content id</label>
+        <input id="contentIdInput" type="text" v-model="contentId" />
+      </div>
+      <div class="flex flex-row items-center space-x-3">
+        <label class="w-24" for="keyInput">Key</label>
+        <input id="keyInput" type="text" v-model="key" />
+      </div>
+      <button
+        class="border-2 px-5 py-2 rounded-lg"
+        :class="[
+          contentId && key
+            ? 'bg-slate-800 text-sky-600 border-slate-700 hover:text-sky-500 hover:bg-slate-700 hover:border-slate-800 cursor-pointer active:scale-80 transition-all duration-200 ease-in-out'
+            : ' bg-slate-800/50 text-sky-600/50 border-slate-700/50 cursor-not-allowed',
+        ]"
+        type="button"
+        @click="getSnippetContent"
+        :disabled="!contentId || !key"
+      >
+        Get snippet
+      </button>
+    </template>
     <div v-if="isLoading" class="p-4 bg-slate-800 text-sky-600 rounded-md">
       Loading and decrypting snippet...
     </div>
@@ -27,7 +50,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
-const snippetId = ref<string | null>(null)
+const contentId = ref<string | null>(null)
 const key = ref<string | null>(null)
 const encryptedText = ref<string | null>(null)
 const iv = ref<string | null>(null)
@@ -36,7 +59,7 @@ const isLoading = ref<boolean>(false)
 const error = ref<string | null>(null)
 
 onMounted(() => {
-  snippetId.value = route.params.id as string
+  contentId.value = route.params.id as string
 
   const urlFragment = window.location.hash
   if (urlFragment) {
@@ -44,15 +67,12 @@ onMounted(() => {
     key.value = decodeURIComponent(fragment)
   }
 
-  if (snippetId.value && key.value) {
+  if (contentId.value && key.value) {
     getSnippetContent()
-  } else {
-    error.value = 'Invalid URL format. Missing snippet ID or encryption key.'
   }
 })
-
 const getSnippetContent = async () => {
-  if (!snippetId.value || !key.value) {
+  if (!contentId.value || !key.value) {
     error.value = 'Missing snippet ID or encryption key.'
     return
   }
@@ -61,7 +81,7 @@ const getSnippetContent = async () => {
   error.value = null
 
   try {
-    const response = await snippetsApi.get(snippetId.value)
+    const response = await snippetsApi.get(contentId.value)
     encryptedText.value = response.content
     iv.value = response.iv
 
