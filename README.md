@@ -42,10 +42,11 @@ The aim for ZeroShare is to provide a secure and private alternative to public p
 
 ### Core Functionality (MVP - Minimum Viable Product Goals)
 
-- **Snippet Creation:** A simple web interface to paste text.
-- **Unique Link Generation:** Automatic creation of a shareable link for each snippet.
-- **Snippet Viewing:** Displaying the snippet content via the unique link.
-- **Expiration:** Allowing snippets to auto-delete after a set duration.
+- [x] **Snippet Creation:** A simple web interface to paste text.
+- [x] **Unique Link Generation:** Automatic creation of a shareable link for each snippet.
+- [x] **Snippet Viewing:** Displaying the snippet content via the unique link.
+- [x] **Expiration:** Allowing snippets to auto-delete after a set duration.
+- [x] **Burn After Reading:** Option to delete the snippet after it has been viewed once.
 
 ### Key Differentiator: Encryption
 
@@ -58,14 +59,14 @@ The aim for ZeroShare is to provide a secure and private alternative to public p
 ### Potential Future Enhancements
 
 - Syntax Highlighting
-- "Burn After Reading" / One-Time View
 - API for programmatic access
 - Password protection (as an additional layer)
+- Custom keys
 
 ## 🛠️ Intended Tech Stack
 
 - **Backend:** C# with ASP.NET Core
-- **Frontend:** Vue 3 with TypeScript
+- **Frontend:** Vue 3 with TypeScript and Tailwind CSS
 - **Database:** PostgreSQL
 - **Deployment (Future):** Docker & Docker Compose
 
