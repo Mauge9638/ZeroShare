@@ -3,7 +3,6 @@ services:
     build:
       context: ./src/backend
       dockerfile: Dockerfile
-    platform: linux/amd64
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DbConnection=${DATABASE_URL}
