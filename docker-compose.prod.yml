@@ -17,7 +17,7 @@ services:
       context: ./src/frontend
       dockerfile: Dockerfile
     volumes:
-      - /etc/letsencrypt/live/zeroshare.app:/etc/ssl/certs:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     ports:
       - "80:80"
       - "443:443"
