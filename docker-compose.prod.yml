@@ -1,0 +1,33 @@
+services:
+  backend:
+    build:
+      context: ./src/backend
+      dockerfile: Dockerfile
+    platform: linux/amd64
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DbConnection=${DATABASE_URL}
+      - ASPNETCORE_URLS=http://+:8080
+    networks:
+      - internal-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./src/frontend
+      dockerfile: Dockerfile
+    volumes:
+      - /etc/letsencrypt/live/zeroshare.app:/etc/ssl/certs:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - backend
+    networks:
+      - internal-network
+    restart: unless-stopped
+
+networks:
+  internal-network:
+    driver: bridge
+    internal: false
