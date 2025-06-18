@@ -1,14 +1,10 @@
 FROM node:22-alpine AS build
 WORKDIR /app
 
-# Install pnpm
 RUN npm install -g pnpm
-
-# Copy package files
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
-# Copy source code and build
 COPY . .
 RUN pnpm build
 
