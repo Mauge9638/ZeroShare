@@ -1,5 +1,3 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
-
 export interface CreateSnippetRequest {
   content: string
   iv: string
@@ -21,7 +19,7 @@ export const snippetsApi = {
       expiresAt: payload.expiresAt?.toISOString(), // Convert Date to UTC string
     }
 
-    const response = await fetch(`${API_BASE_URL}/snippet`, {
+    const response = await fetch(`api/snippet`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -37,7 +35,7 @@ export const snippetsApi = {
   },
 
   async get(id: string): Promise<{ content: string; iv: string }> {
-    const response = await fetch(`${API_BASE_URL}/snippet/${id}`)
+    const response = await fetch(`api/snippet/${id}`)
 
     if (!response.ok) {
       throw new Error(`Failed to fetch snippet: ${response.statusText}`)

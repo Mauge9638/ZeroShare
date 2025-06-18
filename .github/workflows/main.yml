@@ -10,7 +10,6 @@ jobs:
     runs-on: self-hosted
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
