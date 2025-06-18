@@ -45,8 +45,4 @@ export const snippetsApi = {
 
     return response.json()
   },
-
-  async test() {
-    console.log(API_BASE_URL)
-  },
 }
