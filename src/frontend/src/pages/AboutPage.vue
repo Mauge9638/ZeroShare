@@ -63,7 +63,7 @@
         class="text-slate-50 hover:text-slate-50 underline"
         >GitHub</a
       >
-      and is intended to be licensed under the MIT License.
+      and licensed under the Apache 2.0 License.
     </p>
     <p class="pt-4">
       If you have any questions, ideas, or feedback, please feel free to reach out via the GitHub

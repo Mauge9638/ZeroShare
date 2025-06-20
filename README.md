@@ -1,102 +1,163 @@
-# ZeroShare ✨ (Under Development)
+# ZeroShare ✨
 
-**ZeroShare** is an upcoming self-hostable, open-source encrypted snippet sharer. The goal is to enable users to quickly share text snippets, code, configurations, or sensitive notes with a strong emphasis on privacy and control. It's being built with a C#/.NET backend and a Vue3/TypeScript frontend.
+**ZeroShare** is a live, open-source encrypted snippet sharer that prioritizes privacy and security. Share text snippets, code, configurations, or sensitive notes with zero-knowledge encryption - even we can't read your data!
 
-[![Work in Progress](https://img.shields.io/badge/status-work%20in%20progress-yellow?style=for-the-badge)](https://github.com/YOUR_USERNAME/ZeroShare)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+ZeroShare offers a **core open-source platform** that you can self-host, and **ZeroShare Cloud ([zeroshare.app](https://zeroshare.app))**, the official managed service offering additional convenience and premium features.
 
-<!-- Add your GitHub repo link for the WIP badge if you wish -->
+🌐 **Experience ZeroShare Cloud: [zeroshare.app](https://zeroshare.app)**
 
-## ⚠️ Current Status
-
-**This project is in its early stages of development.** Many features described below are planned and not yet implemented. The primary focus currently is on laying the foundational architecture. There are no stable releases or complete build/run instructions at this time.
+[![Live on zeroshare.app](https://img.shields.io/badge/status-live%20on%20zeroshare.app-brightgreen?style=for-the-badge)](https://zeroshare.app)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=for-the-badge)](https://opensource.org/licenses/Apache-2.0)
+[![Open Source](https://img.shields.io/badge/open%20source-yes-blue?style=for-the-badge)](https://github.com/Mauge9638/ZeroShare)
 
 ## Table of Contents
 
-- [ZeroShare ✨ (Under Development)](#zeroshare--under-development)
-  - [⚠️ Current Status](#️-current-status)
+- [ZeroShare ✨](#zeroshare-)
   - [Table of Contents](#table-of-contents)
-  - [🌟 Vision: Why ZeroShare?](#-vision-why-zeroshare)
-  - [🎯 Planned Features](#-planned-features)
-    - [Core Functionality (MVP - Minimum Viable Product Goals)](#core-functionality-mvp---minimum-viable-product-goals)
-    - [Key Differentiator: Encryption](#key-differentiator-encryption)
-    - [Potential Future Enhancements](#potential-future-enhancements)
-  - [🛠️ Intended Tech Stack](#️-intended-tech-stack)
-  - [🌱 Following Progress \& Getting Involved](#-following-progress--getting-involved)
-  - [🤝 Contributing Ideas](#-contributing-ideas)
+  - [🌟 Why ZeroShare?](#-why-zeroshare)
+  - [✅ Core Features (Live on zeroshare.app \& in OSS)](#-core-features-live-on-zeroshareapp--in-oss)
+  - [🔒 Zero-Knowledge Encryption: The Foundation](#-zero-knowledge-encryption-the-foundation)
+  - [🚀 Roadmap: Evolving ZeroShare](#-roadmap-evolving-zeroshare)
+    - [Core Open-Source Enhancements](#core-open-source-enhancements)
+    - [ZeroShare Cloud: Premium Services \& Features (Planned for zeroshare.app)](#zeroshare-cloud-premium-services--features-planned-for-zeroshareapp)
+  - [🛠️ Tech Stack](#️-tech-stack)
+  - [🏠 Self-Hosting the Open-Source Version](#-self-hosting-the-open-source-version)
+  - [🤝 Contributing to Open Source](#-contributing-to-open-source)
   - [📄 License](#-license)
 
-## 🌟 Vision: Why ZeroShare?
+## 🌟 Why ZeroShare?
 
-The aim for ZeroShare is to provide a secure and private alternative to public pastebins, focusing on:
+ZeroShare provides a secure and private alternative to public pastebins:
 
-- **🔒 Privacy & Control:**
-  - **Zero-Knowledge Encryption (Client-Side):** The core design principle. Snippets will be encrypted _in the user's browser_ before being sent to the server. The server will only store encrypted data, and the decryption key will remain with the user (via the URL fragment), ensuring that even the server administrator cannot read the snippets.
-  - **Self-Hosting:** Users will be able to host ZeroShare on their own infrastructure, keeping their data entirely within their control.
-  - **No Account Needed (by default):** For quick, frictionless sharing.
-- **✨ Customization & Openness:**
-  - As an open-source project, the community will be able to inspect, modify, and extend ZeroShare.
-- **🏢 Addressing a Need:** Provide a trustworthy tool for developers, teams, and privacy-conscious individuals.
+- **🔒 True Privacy:** Zero-knowledge encryption means your data is encrypted _in your browser_ before it ever reaches the servers. This applies to both the OSS version and ZeroShare Cloud.
+- **🚀 No Friction (Core):** For basic sharing, no accounts are needed on [zeroshare.app](https://zeroshare.app)'s free tier or in the self-hosted version.
+- **🏠 Your Control with Open Source:** The core platform is open-source (Apache 2.0 License) and designed for self-hosting if you prefer full control.
+- **🛡️ Security First:** Even on ZeroShare Cloud, we cannot read your snippets. The decryption key never leaves your browser.
+- **☁️ Convenience with ZeroShare Cloud:** [zeroshare.app](https://zeroshare.app) offers a managed, hassle-free experience with plans for additional features and capabilities.
+- **✨ Community & Transparency:** The open-source nature allows anyone to inspect, verify, and contribute to the core technology.
 
-## 🎯 Planned Features
+## ✅ Core Features (Live on [zeroshare.app](https://zeroshare.app) & in OSS)
 
-### Core Functionality (MVP - Minimum Viable Product Goals)
+The foundational ZeroShare experience is live and fully functional at **[zeroshare.app](https://zeroshare.app)** and forms the basis of the open-source version:
 
-- [x] **Snippet Creation:** A simple web interface to paste text.
-- [x] **Unique Link Generation:** Automatic creation of a shareable link for each snippet.
-- [x] **Snippet Viewing:** Displaying the snippet content via the unique link.
-- [x] **Expiration:** Allowing snippets to auto-delete after a set duration.
-- [x] **Burn After Reading:** Option to delete the snippet after it has been viewed once.
+- ✅ **Snippet Creation:** Simple web interface to paste and share text.
+- ✅ **Zero-Knowledge Encryption:** Client-side encryption with AES-GCM.
+- ✅ **Unique Link Generation:** Automatic creation of shareable links.
+- ✅ **Secure Viewing:** Decrypt and view snippets via unique links.
+- ✅ **Auto-Expiration:** Snippets auto-delete after a set duration.
+- ✅ **Burn After Reading:** One-time view option for maximum security.
+- ✅ **Responsive Design:** Works seamlessly on desktop and mobile.
 
-### Key Differentiator: Encryption
+## 🔒 Zero-Knowledge Encryption: The Foundation
 
-- **Client-Side Encryption (Zero-Knowledge):** This is foundational.
-  1.  Text is encrypted in the browser using `window.crypto.subtle` (e.g., AES-GCM).
-  2.  A randomly generated encryption key is combined with the snippet's unique ID in the shareable link's fragment (e.g., `your.zeroshare.app/view/{id}#DECRYPTION_KEY`).
-  3.  The server receives and stores only the _encrypted_ text. It never sees the decryption key.
-  4.  When viewing, the browser fetches the encrypted text, and JavaScript uses the key from the URL fragment to decrypt and display the content locally.
+The core security model ensures maximum privacy for all users:
 
-### Potential Future Enhancements
+1. **Encryption happens in your browser** using `window.crypto.subtle` (AES-GCM).
+2. A **random encryption key** is generated locally and is _**never**_ sent to the servers.
+3. The **decryption key travels in the URL fragment** (e.g., `zeroshare.app/view/{id}#DECRYPTION_KEY`), which browsers do not send to servers.
+4. The **server stores only encrypted data** – we literally cannot read your snippets.
+5. **Decryption happens locally in the viewer's browser** when they open the link.
 
-- Syntax Highlighting
-- API for programmatic access
-- Password protection (as an additional layer)
-- Custom keys
+## 🚀 Roadmap: Evolving ZeroShare
 
-## 🛠️ Intended Tech Stack
+ZeroShare is continuously evolving! We are committed to enhancing the core open-source product and building out **ZeroShare Cloud** ([zeroshare.app](https://zeroshare.app)) with premium features and services.
+
+### Core Open-Source Enhancements
+
+_(These features will be part of the self-hostable OSS version and also available on ZeroShare Cloud's free/core offering. As the project is open source, **any feature implemented in the public repository will be available to self-hosters.**)_
+
+- [ ] **Easy Self-Hosting:** Docker Compose setup with minimal configuration and comprehensive guides.
+- [ ] **Syntax Highlighting:** For improved readability of code snippets.
+- [ ] **User-Defined Encryption Keys:** Option to use custom passwords instead of randomly generated keys.
+- [ ] **Basic API Access:** For individual users to create snippets programmatically (rate-limited).
+- [ ] **Basic CLI Tool:** For quick snippet sharing from the command line.
+- [ ] **Internationalization (i18n) & Localization (L10n):** Support for multiple languages.
+- [ ] **Accessibility Improvements (a11y):** Ensuring the platform is usable by everyone.
+
+### ZeroShare Cloud: Premium Services & Features (Planned for [zeroshare.app](https://zeroshare.app))
+
+**ZeroShare Cloud ([zeroshare.app](https://zeroshare.app)) is the official managed service.** It offers the convenience of a ready-to-use platform with additional capabilities designed for individuals and teams needing more power, scale, and managed services. Subscriptions to ZeroShare Cloud will help fund the continued development and maintenance of the open-source core.
+
+**The Open Core Philosophy:**
+
+- **The open-source ZeroShare repository ([GitHub](https://github.com/Mauge9638/ZeroShare)) contains the full application code.** If a feature is developed and committed to this public repository, it will be available to anyone who clones, forks, or self-hosts the application.
+- **Premium on ZeroShare Cloud** refers to:
+  - **Managed Hosting & Convenience:** No need to set up or maintain servers, databases, or updates.
+  - **Guaranteed Uptime & Scalability:** We handle the infrastructure to ensure ZeroShare Cloud is reliable and performant.
+  - **Higher Resource Limits:** Generous allowances for snippet size, storage, API calls, etc., beyond typical self-hosted defaults or the free tier.
+  - **Consolidated Team Management Features:** Streamlined interfaces and tools for team administration and billing.
+  - **Dedicated Support:** Priority assistance for subscribers.
+  - **Potentially, integrations or add-on services** that are separate from the core application code (e.g., advanced analytics dashboards if relevant and privacy-preserving).
+
+**Planned Premium Capabilities on ZeroShare Cloud:**
+
+**For Individuals (Pro Plans):**
+
+- [ ] **User Accounts:** To manage snippets, preferences, and subscriptions on ZeroShare Cloud.
+- [ ] **Increased Resource Limits on Cloud:** Larger max snippet size, more active snippets, longer/custom default expiration times.
+- [ ] **Advanced Expiration Options on Cloud:** "Burn after X views" (e.g., 2, 5, 10 views).
+- [ ] **Custom Snippet IDs / Vanity URLs on Cloud:** Create more memorable and branded links.
+- [ ] **Enhanced Snippet Management Dashboard on Cloud:** Better organization and overview of your created snippets (metadata only).
+- [ ] **Priority Support (Individual).**
+
+**For Teams & Businesses (Workspace Plans):**
+
+- [ ] **Team Workspaces on Cloud:** Centralized environment for team collaboration.
+- [ ] **Secure Team Snippet Sharing & Drives on Cloud:** Mechanisms for teams to securely share and manage collections of snippets (still leveraging client-side encryption).
+- [ ] **Role-Based Access Control (RBAC) on Cloud:** Define roles (e.g., admin, editor, viewer) for team members.
+- [ ] **Team Member Management & Invitations on Cloud.**
+- [ ] **Audit Logs (Metadata Only) on Cloud:** Track snippet creation, sharing, and access _within the team's workspace context_. Content remains zero-knowledge.
+- [ ] **Encrypted File Sharing on Cloud:** Extend zero-knowledge principles to securely share small files (encrypted client-side).
+  - _Cloud Aspects: Managed file size limits, team storage quotas, optimized delivery._
+- [ ] **Advanced API Access & Webhooks on Cloud:** Higher rate limits, team-specific API endpoints, and notifications for team events.
+- [ ] **Centralized Billing & Invoicing.**
+- [ ] **Priority Team Support.**
+- [ ] **(Future) Custom Branding Options for Workspaces on Cloud.**
+
+We believe in a strong open-source core, with ZeroShare Cloud offering sustainable funding for the project's continued development and providing valuable, privacy-preserving services for those who need them.
+
+## 🛠️ Tech Stack
 
 - **Backend:** C# with ASP.NET Core
 - **Frontend:** Vue 3 with TypeScript and Tailwind CSS
-- **Database:** PostgreSQL
-- **Deployment (Future):** Docker & Docker Compose
+- **Database (for ZeroShare Cloud & default for OSS):** PostgreSQL (Neon for ZeroShare Cloud)
+- **Deployment (OSS Future):** Docker & Docker Compose
 
-## 🌱 Following Progress & Getting Involved
+## 🏠 Self-Hosting the Open-Source Version
 
-This project is currently under active development. You can:
+**Self-hosting configuration is currently in development.** The goal is to make it easy for anyone to run their own instance of ZeroShare, with access to all features present in the open-source codebase.
 
-1.  **Clone the repository** to explore the codebase and see its progress:
+The ZeroShare open-source repository ([GitHub](https://github.com/Mauge9638/ZeroShare)) contains the full application. By self-hosting, you get:
 
-    ```bash
-    git clone https://github.com/Mauge9638/ZeroShare.git
-    cd ZeroShare
-    ```
+- **Full Control:** Over your data, configuration, and features.
+- **All Core Features:** Access to every feature implemented in the public codebase.
+- **No Service Fees:** You only manage your own infrastructure costs.
 
-    (Note: Build and run instructions are not yet available as the project is not in a runnable state.)
+While ZeroShare is open-source under the Apache 2.0 license, a polished, easy-to-use self-hosting setup (e.g., with Docker Compose) is on the roadmap.
 
-2.  **Watch this repository** on GitHub to get notified of updates.
-3.  Check the **Issues** tab for planned work or to report bugs as the project matures.
+1. Watch this GitHub repository for updates.
+2. Check the "Issues" tab for discussions and progress related to self-hosting.
+3. Star the repo to show your interest!
 
-## 🤝 Contributing Ideas
+```bash
+git clone https://github.com/Mauge9638/ZeroShare.git
+cd ZeroShare
+# Stay tuned for detailed self-hosting instructions!
+```
 
-While full code contributions might be premature, ideas, suggestions, and discussions are welcome! Feel free to:
+## 🤝 Contributing to Open Source
 
-- Open an **Issue** to discuss potential features or improvements.
-- Participate in existing discussions.
+We welcome contributions to the open-source core of ZeroShare! Here's how you can help:
 
-As the project stabilizes, more formal contribution guidelines will be provided.
+- **🐛 Report Bugs:** Found an issue on [zeroshare.app](https://zeroshare.app) or while trying to set up the code? Open an issue on GitHub.
+- **💡 Suggest Features:** Have ideas for the core product or for ZeroShare Cloud? Share them by opening an issue.
+- **📝 Documentation:** Help improve the README, guides, and comments.
+- **🔧 Code Contributions:** Submit pull requests for bug fixes and features for the open-source components.
 
 ## 📄 License
 
-This project is intended to be licensed under the MIT License.
+This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details.
 
 ---
+
+**Ready to share securely? Try ZeroShare at [zeroshare.app](https://zeroshare.app) 🚀**
