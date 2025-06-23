@@ -44,5 +44,45 @@ namespace Backend.Repositories
             await _context.SaveChangesAsync();
             return expiredSnippets.Count;
         }
+
+        public async Task<int> DeleteInactiveSnippetsAsync(int inactivityRetentionDays)
+        {
+            var expiredSnippets = await _context.Snippet
+                .Where(s => s.LastAccessedAt.AddDays(inactivityRetentionDays) < DateTime.UtcNow)
+                .ToListAsync();
+
+            if (expiredSnippets.Count <= 0) return 0;
+
+            _context.Snippet.RemoveRange(expiredSnippets);
+            await _context.SaveChangesAsync();
+            return expiredSnippets.Count;
+        }
+
+        public async Task<Snippet?> UpdateAsync(Snippet snippet)
+        {
+            var existingSnippet = await GetByContentIdAsync(snippet.ContentId);
+            if (existingSnippet == null) return null;
+
+            existingSnippet.Content = snippet.Content;
+            existingSnippet.IV = snippet.IV;
+            existingSnippet.BurnAfterRead = snippet.BurnAfterRead;
+            existingSnippet.ExpiresAt = snippet.ExpiresAt;
+            existingSnippet.LastAccessedAt = DateTime.UtcNow;
+
+            _context.Snippet.Update(existingSnippet);
+            await _context.SaveChangesAsync();
+            return existingSnippet;
+        }
+
+        public async Task<Snippet?> UpdateLastAccessedAsync(string contentId, DateTime lastAccessedAt)
+        {
+            var snippet = await GetByContentIdAsync(contentId);
+            if (snippet == null) return null;
+
+            snippet.LastAccessedAt = lastAccessedAt;
+            _context.Snippet.Update(snippet);
+            await _context.SaveChangesAsync();
+            return snippet;
+        }
     }
 }

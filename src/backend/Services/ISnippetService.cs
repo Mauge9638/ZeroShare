@@ -8,6 +8,5 @@ namespace Backend.Services
         Task<SnippetViewDTO?> GetSnippetAsync(string contentId);
         Task<(string contentId, SnippetDTO snippet)> CreateSnippetAsync(SnippetDTO snippetDTO);
 
-        Task<bool> DeleteSnippetAsync(string contentId);
     }
 }

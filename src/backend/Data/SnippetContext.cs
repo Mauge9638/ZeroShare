@@ -31,6 +31,11 @@ namespace Backend.Data
             modelBuilder.Entity<Snippet>()
                 .Property(s => s.ExpiresAt)
                 .IsRequired(false);
+
+            modelBuilder.Entity<Snippet>()
+                .Property(s => s.LastAccessedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
         }
     }
 }
