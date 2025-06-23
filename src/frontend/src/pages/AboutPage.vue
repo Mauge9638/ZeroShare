@@ -1,59 +1,100 @@
 <template>
   <div class="text-slate-300 p-2">
-    <h1 class="text-3xl font-bold text-slate-50 pb-6">About ZeroShare</h1>
+    <h1 class="text-3xl font-bold text-slate-50 pb-6">About ZeroShare ✨</h1>
 
     <p class="pt-4">
-      ZeroShare is a self-hostable, open-source encrypted snippet sharer, currently under
-      development. The goal is to enable users to quickly share text snippets, code, configurations,
-      or sensitive notes with a strong emphasis on privacy and control.
+      ZeroShare is a live, open-source encrypted snippet sharer that prioritizes privacy and
+      security. Share text snippets, code, configurations, or sensitive notes with zero-knowledge
+      encryption - even we can't read your data!
     </p>
 
-    <h2 class="text-2xl font-semibold text-slate-50 pt-6 pb-3">The Vision</h2>
-    <p class="pt-2">
-      The aim for ZeroShare is to provide a secure and private alternative to public pastebins,
-      focusing on:
+    <p class="pt-4">
+      ZeroShare offers a <strong>core open-source platform</strong> that you can self-host, and
+      <strong>ZeroShare Cloud</strong>, the official managed service offering additional convenience
+      and premium features.
     </p>
+
+    <h2 class="text-2xl font-semibold text-slate-50 pt-6 pb-3">Why ZeroShare?</h2>
+    <p class="pt-2">ZeroShare provides a secure and private alternative to public pastebins:</p>
     <ul class="list-disc list-inside pl-4 pt-2 space-y-1">
       <li>
-        <strong>Privacy & Control:</strong> Through zero-knowledge, client-side encryption and the
-        ability to self-host.
+        <strong>🔒 True Privacy:</strong> Zero-knowledge encryption means your data is encrypted in
+        your browser before it ever reaches the servers.
       </li>
-      <li><strong>No Account Needed (by default):</strong> For quick, frictionless sharing.</li>
+      <li><strong>🚀 No Friction:</strong> For basic sharing, no accounts are needed.</li>
       <li>
-        <strong>Customization & Openness:</strong> As an open-source project, the community can
-        inspect, modify, and extend ZeroShare.
+        <strong>🏠 Your Control:</strong> The core platform is open-source and designed for
+        self-hosting if you prefer full control.
+      </li>
+      <li>
+        <strong>🛡️ Security First:</strong> We cannot read your snippets. The decryption key never
+        leaves your browser.
+      </li>
+      <li>
+        <strong>✨ Community & Transparency:</strong> The open-source nature allows anyone to
+        inspect, verify, and contribute to the core technology.
       </li>
     </ul>
 
     <h2 class="text-2xl font-semibold text-slate-50 pt-6 pb-3">
-      Key Feature: Zero-Knowledge Encryption
+      🔒 Zero-Knowledge Encryption: The Foundation
     </h2>
-    <p class="pt-2">This is a foundational principle of ZeroShare. Here's how it works:</p>
+    <p class="pt-2">The core security model ensures maximum privacy for all users:</p>
     <ol class="list-decimal list-inside pl-4 pt-2 space-y-1">
-      <li>Text is encrypted in your browser using the Web Crypto API (AES-GCM).</li>
       <li>
-        A randomly generated encryption key is part of the shareable link's fragment (the part after
-        the '#').
+        <strong>Encryption happens in your browser</strong> using
+        <code class="bg-slate-700 px-1 rounded">window.crypto.subtle</code> (AES-GCM).
       </li>
       <li>
-        The server receives and stores only the <strong>encrypted</strong> text. It never sees the
-        decryption key.
+        A <strong>random encryption key</strong> is generated locally and is never sent to the
+        servers.
       </li>
       <li>
-        When viewing a snippet, your browser fetches the encrypted text, and JavaScript uses the key
-        from the URL fragment to decrypt and display the content locally.
+        The <strong>decryption key travels in the URL fragment</strong> (the part after the '#'),
+        which browsers do not send to servers.
+      </li>
+      <li>
+        The <strong>server stores only encrypted data</strong> – we literally cannot read your
+        snippets.
+      </li>
+      <li>
+        <strong>Decryption happens locally in the viewer's browser</strong> when they open the link.
       </li>
     </ol>
-    <p class="pt-2">
-      This ensures that even the server administrator cannot read the content of your shared
-      snippets.
-    </p>
 
-    <h2 class="text-2xl font-semibold text-slate-50 pt-6 pb-3">Development Status</h2>
+    <h2 class="text-2xl font-semibold text-slate-50 pt-6 pb-3">✅ Core Features</h2>
+    <p class="pt-2">ZeroShare is live and fully functional with these features:</p>
+    <ul class="list-disc list-inside pl-4 pt-2 space-y-1">
+      <li><strong>Snippet Creation:</strong> Simple web interface to paste and share text.</li>
+      <li><strong>Zero-Knowledge Encryption:</strong> Client-side encryption with AES-GCM.</li>
+      <li><strong>Unique Link Generation:</strong> Automatic creation of shareable links.</li>
+      <li><strong>Secure Viewing:</strong> Decrypt and view snippets via unique links.</li>
+      <li><strong>Auto-Expiration:</strong> Snippets auto-delete after a set duration.</li>
+      <li><strong>Burn After Reading:</strong> One-time view option for maximum security.</li>
+      <li><strong>Responsive Design:</strong> Works seamlessly on desktop and mobile.</li>
+    </ul>
+
+    <h2 class="text-2xl font-semibold text-slate-50 pt-6 pb-3">🚀 What's Coming Next</h2>
     <p class="pt-2">
-      Please note: ZeroShare is in its early stages of development. Many features are planned and
-      not yet implemented.
+      ZeroShare is continuously evolving! We're committed to enhancing the core open-source product
+      with features like:
     </p>
+    <ul class="list-disc list-inside pl-4 pt-2 space-y-1">
+      <li>Easy self-hosting with Docker Compose</li>
+      <li>Syntax highlighting for code snippets</li>
+      <li>User-defined encryption keys</li>
+      <li>Basic API access and CLI tool</li>
+      <li>Internationalization and accessibility improvements</li>
+      <li>Features for teams to easily share internally</li>
+    </ul>
+
+    <h2 class="text-2xl font-semibold text-slate-50 pt-6 pb-3">🛠️ Tech Stack</h2>
+    <ul class="list-disc list-inside pl-4 pt-2 space-y-1">
+      <li><strong>Backend:</strong> C# with ASP.NET Core</li>
+      <li><strong>Frontend:</strong> Vue 3 with TypeScript and Tailwind CSS</li>
+      <li><strong>Database:</strong> PostgreSQL</li>
+      <li><strong>Deployment:</strong> Docker & Docker Compose (planned for self-hosting)</li>
+    </ul>
 
     <p class="pt-6">
       The source code for ZeroShare is available on
@@ -67,11 +108,7 @@
     </p>
     <p class="pt-4">
       If you have any questions, ideas, or feedback, please feel free to reach out via the GitHub
-      repository.
+      repository or contribute to the open-source project!
     </p>
   </div>
 </template>
-
-<script setup lang="ts"></script>
-
-<style scoped></style>
