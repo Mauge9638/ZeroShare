@@ -6,7 +6,7 @@
       <RouterLink class="cursor-pointer" to="/create">Create</RouterLink>
       <RouterLink class="cursor-pointer" to="/about">About</RouterLink>
     </div>
-    <RouterView class="min-w-fit flex-1 overflow-auto p-4" />
+    <RouterView class="min-w-fit flex-1 overflow-auto p-4" :key="$route.fullPath" />
   </main>
 </template>
 
