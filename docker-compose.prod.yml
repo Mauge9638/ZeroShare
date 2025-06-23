@@ -7,6 +7,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DbConnection=${DATABASE_URL}
       - ASPNETCORE_URLS=http://+:8080
+      - SnippetCleanup__InactivityRetentionDays=${INACTIVITY_RETENTION_DAYS}
+      - SnippetCleanup__IntervalCleanupMinutes=${INTERVAL_CLEANUP_MINUTES}
     networks:
       - internal-network
     restart: unless-stopped
@@ -17,6 +19,7 @@ services:
       dockerfile: Dockerfile
       args:
         - API_BASE_URL=${API_BASE_URL}
+        - INACTIVITY_RETENTION_DAYS=${INACTIVITY_RETENTION_DAYS}
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt:ro
     ports:

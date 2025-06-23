@@ -11,6 +11,8 @@ jobs:
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       API_BASE_URL: ${{ secrets.API_BASE_URL }}
+      INACTIVITY_RETENTION_DAYS: ${{ vars.INACTIVITY_RETENTION_DAYS }}
+      INTERVAL_CLEANUP_MINUTES: ${{ vars.INTERVAL_CLEANUP_MINUTES }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4

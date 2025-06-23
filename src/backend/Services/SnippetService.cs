@@ -20,6 +20,10 @@ namespace Backend.Services
             {
                 return null;
             }
+
+            // Set LastAccessedAt to now
+            await _repository.UpdateLastAccessedAsync(snippet.ContentId, DateTime.UtcNow);
+
             if (snippet.BurnAfterRead)
             {
                 await _repository.DeleteAsync(contentId);
@@ -64,17 +68,6 @@ namespace Backend.Services
             return (contentId, new SnippetDTO(snippet));
         }
 
-        public async Task<bool> DeleteSnippetAsync(string contentId)
-        {
-            try
-            {
-                return await _repository.DeleteAsync(contentId);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                _logger.LogError(ex, "Failed to delete snippet with ContentId '{ContentId}'", contentId);
-                return false;
-            }
-        }
+
     }
 }
