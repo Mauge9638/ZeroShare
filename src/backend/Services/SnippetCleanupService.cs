@@ -2,11 +2,14 @@ using Backend.Repositories;
 
 namespace Backend.Services
 {
-    public class SnippetCleanupService(IServiceProvider serviceProvider, ILogger<SnippetCleanupService> logger) : BackgroundService
+    public class SnippetCleanupService(IServiceProvider serviceProvider, ILogger<SnippetCleanupService> logger, IConfiguration configuration) : BackgroundService
     {
         private readonly IServiceProvider _serviceProvider = serviceProvider;
         private readonly ILogger<SnippetCleanupService> _logger = logger;
-        private readonly TimeSpan _period = TimeSpan.FromMinutes(5);
+        private readonly TimeSpan _cleanupIntervalMinutes = configuration.GetValue<TimeSpan>("SnippetCleanup:IntervalCleanupMinutes", TimeSpan.FromMinutes(60));
+
+        private readonly int _inactivityRetentionDays = configuration.GetValue<int>("SnippetCleanup:InactivityRetentionDays", 30);
+
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -21,7 +24,7 @@ namespace Backend.Services
                     _logger.LogError(ex, "Error occurred while cleaning up expired snippets");
                 }
 
-                await Task.Delay(_period, stoppingToken);
+                await Task.Delay(_cleanupIntervalMinutes, stoppingToken);
             }
         }
 
@@ -32,9 +35,11 @@ namespace Backend.Services
             using var scope = _serviceProvider.CreateScope();
             var repository = scope.ServiceProvider.GetRequiredService<ISnippetRepository>();
 
-            var deletedCount = await repository.DeleteExpiredSnippetsAsync(DateTime.UtcNow);
+            var deletedExpiredCount = await repository.DeleteExpiredSnippetsAsync(DateTime.UtcNow);
 
-            _logger.LogInformation("Cleaned up {Count} expired snippets at {Time}", deletedCount, DateTime.UtcNow);
+            var deletedInactiveCount = await repository.DeleteInactiveSnippetsAsync(_inactivityRetentionDays);
+
+            _logger.LogInformation("Cleaned up {Count} expired snippets at {Time}", deletedExpiredCount, DateTime.UtcNow);
         }
     }
 }

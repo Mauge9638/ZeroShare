@@ -4,6 +4,9 @@
     :class="isLoading ? 'cursor-progress' : ''"
   >
     <h2 class="text-slate-50 text-2xl">Enter or paste your text below</h2>
+    <div class="text-slate-50 text-sm">
+      (Snippets/texts are deleted after {{ INACTIVITY_RETENTION_DAYS }} days of inactivity)
+    </div>
     <textarea class="w-1/2 h-1/2" name="createTextArea" id="createTextArea" v-model="textToShare" />
     <div class="flex items-center ps-4 border border-slate-700 rounded-lg p-4 space-x-2">
       <input
@@ -83,6 +86,8 @@ import { arrayBufferToBase64, uint8ArrayToBase64 } from '@/utils/toStringHelpers
 import { computed, ref, watch } from 'vue'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import { snippetsApi, type CreateSnippetRequest } from '@/api/requests'
+
+const INACTIVITY_RETENTION_DAYS = import.meta.env.VITE_INACTIVITY_RETENTION_DAYS
 
 const textToShare = ref<string>('')
 const burnAfterRead = ref<boolean>(false)

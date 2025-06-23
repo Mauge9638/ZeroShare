@@ -10,6 +10,8 @@ public class Snippet
     public DateTime CreatedAt { get; set; }
     public DateTime? ExpiresAt { get; set; } = null;
 
+    public DateTime LastAccessedAt { get; set; }
+
     public Snippet() { }
     public Snippet(
         string content,
@@ -17,7 +19,9 @@ public class Snippet
         string iv,
         bool burnAfterRead,
         DateTime createdAt,
-        DateTime expiresAt)
+        DateTime expiresAt,
+        DateTime lastAccessedAt
+        )
     {
         Content = content;
         ContentId = contentId;
@@ -25,6 +29,7 @@ public class Snippet
         BurnAfterRead = burnAfterRead;
         CreatedAt = createdAt;
         ExpiresAt = expiresAt;
+        LastAccessedAt = lastAccessedAt;
     }
 
 }
@@ -36,13 +41,16 @@ public class SnippetDTO
     public bool BurnAfterRead { get; set; } = false;
     public DateTime? ExpiresAt { get; set; } = null;
 
+    public DateTime LastAccessedAt { get; set; }
+
     public SnippetDTO() { }
-    public SnippetDTO(string content, string iv, bool burnAfterRead, DateTime? expiresAt)
+    public SnippetDTO(string content, string iv, bool burnAfterRead, DateTime? expiresAt, DateTime lastAccessedAt)
     {
         Content = content;
         IV = iv;
         BurnAfterRead = burnAfterRead;
         ExpiresAt = expiresAt;
+        LastAccessedAt = lastAccessedAt;
     }
 
     [System.Diagnostics.CodeAnalysis.SetsRequiredMembers]
@@ -52,6 +60,7 @@ public class SnippetDTO
         IV = snippet.IV;
         BurnAfterRead = snippet.BurnAfterRead;
         ExpiresAt = snippet.ExpiresAt;
+        LastAccessedAt = snippet.LastAccessedAt;
     }
 }
 

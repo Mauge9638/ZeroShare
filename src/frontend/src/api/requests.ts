@@ -18,7 +18,7 @@ export const snippetsApi = {
   async create(payload: CreateSnippetRequest): Promise<string> {
     const apiPayload: CreateSnippetApiPayload = {
       ...payload,
-      expiresAt: payload.expiresAt?.toISOString(), // Convert Date to UTC string
+      expiresAt: payload.expiresAt?.toISOString(),
     }
 
     const response = await fetch(`${API_BASE_URL}/snippet`, {
