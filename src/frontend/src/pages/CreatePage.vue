@@ -78,26 +78,34 @@
       </div>
     </div>
     <div v-if="errorText" class="p-4 bg-red-500 font-bold rounded-md w-1/2">{{ errorText }}</div>
-    <div class="text-sm text-slate-400">
+    <div class="flex flex-row text-sm text-slate-400">
       Original: {{ currentTextSize.formatted }} | Encrypted size:
-      {{ estimatedEncryptedSize.formatted }} / {{ MAX_SIZE_KB }} KB
+      <div class="flex flex-row">
+        &nbsp;
+        <div :class="encryptedContentSize / 1024 > MAX_SIZE_KB ? 'text-red-500' : ''">
+          {{ formattedEncryptedContentSize }}
+        </div>
+        / {{ MAX_SIZE_KB }} KB
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { arrayBufferToBase64, uint8ArrayToBase64 } from '@/utils/toStringHelpers'
 import { computed, ref, watch } from 'vue'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import { snippetsApi } from '@/api/requests'
 import type { CreateSnippetRequest } from '@/types/requestTypes'
+import { encryptTextWithRandomKey } from '@/utils/crypto'
+import type { EncryptedTextWithKey } from '@/types/cryptoTypes'
 
 const INACTIVITY_RETENTION_DAYS = import.meta.env.VITE_INACTIVITY_RETENTION_DAYS
 
 const textToShare = ref<string>('')
 const burnAfterRead = ref<boolean>(false)
 const expiresAtDate = ref<Date | null>(null)
-const encryptedTextBase64 = ref<string>('')
+const encryptedContentSize = ref<number>(0)
+const formattedEncryptedContentSize = ref<string>('')
 
 const errorText = ref<string | null>(null)
 const shareableLink = ref<string | null>(null)
@@ -119,7 +127,11 @@ watch(
 
 const canCreateSnippet = computed(() => {
   checkIfExpiresAtIsValid()
-  return textToShare.value.trim().length > 0 && !errorText.value
+  return (
+    textToShare.value.trim().length > 0 &&
+    !errorText.value &&
+    encryptedContentSize.value / 1024 <= MAX_SIZE_KB
+  )
 })
 
 const checkIfExpiresAtIsValid = () => {
@@ -142,7 +154,6 @@ const copyShareableLinkToClipboard = async () => {
   if (shareableLink.value) {
     try {
       await navigator.clipboard.writeText(shareableLink.value)
-      console.log('Shareable link copied to clipboard:', shareableLink.value)
     } catch (err) {
       console.error('Failed to copy shareable link:', err)
     }
@@ -155,44 +166,11 @@ const processSnippet = async () => {
     return
   }
   try {
-    const crypto = window.crypto
-    const subtleCrypto = window.crypto.subtle
-    const text = textToShare.value
-    const encoder = new TextEncoder()
-    const dataToEncrypt = encoder.encode(text)
-
-    const iv = crypto.getRandomValues(new Uint8Array(24))
-
-    const generatedKey = await subtleCrypto.generateKey(
-      {
-        name: 'AES-GCM',
-        length: 256,
-      },
-      true,
-      ['encrypt', 'decrypt'],
-    )
-
-    const encryptedArrayBuffer = await subtleCrypto.encrypt(
-      {
-        name: 'AES-GCM',
-        iv: iv,
-      },
-      generatedKey,
-      dataToEncrypt,
-    )
-
-    const exportedKeyJwk = await subtleCrypto.exportKey('jwk', generatedKey)
-    if (!exportedKeyJwk.k) {
-      throw new Error('Failed to export key')
-    }
-    const key = exportedKeyJwk.k
-
-    encryptedTextBase64.value = arrayBufferToBase64(encryptedArrayBuffer)
-    const ivBase64 = uint8ArrayToBase64(iv)
+    const { iv, content, key } = await encryptTextWithRandomKey(textToShare.value)
 
     const createObject: CreateSnippetRequest = {
-      content: encryptedTextBase64.value,
-      iv: ivBase64,
+      content: content,
+      iv: iv,
       burnAfterRead: burnAfterRead.value,
     }
     if (expiresAtDate.value) {
@@ -214,6 +192,20 @@ const processSnippet = async () => {
   }
 }
 
+watch(
+  () => textToShare.value,
+  async () => {
+    const { content } = await encryptTextWithRandomKey(textToShare.value)
+
+    const encryptedSize = getTextSizeInBytes(content)
+    const encryptedSizeInKb = encryptedSize / 1024
+
+    encryptedContentSize.value = encryptedSize
+    formattedEncryptedContentSize.value =
+      encryptedSizeInKb < 1 ? `${encryptedSize} bytes` : `${encryptedSizeInKb.toFixed(4)} KB`
+  },
+)
+
 const getTextSizeInBytes = (text: string): number => {
   return new TextEncoder().encode(text).length
 }
@@ -225,18 +217,6 @@ const currentTextSize = computed(() => {
     bytes: sizeInBytes,
     kb: sizeInKB,
     formatted: sizeInKB < 1 ? `${sizeInBytes} bytes` : `${sizeInKB.toFixed(1)} KB`,
-  }
-})
-
-const estimatedEncryptedSize = computed(() => {
-  if (!textToShare.value) return { formatted: '0 bytes' }
-
-  const estimatedEncrypted = getTextSizeInBytes(encryptedTextBase64.value)
-  const estimatedKB = estimatedEncrypted / 1024
-
-  return {
-    bytes: estimatedEncrypted,
-    formatted: estimatedKB < 1 ? `${estimatedEncrypted} bytes` : `${estimatedKB.toFixed(1)} KB`,
   }
 })
 </script>
