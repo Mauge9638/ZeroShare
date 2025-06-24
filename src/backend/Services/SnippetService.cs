@@ -1,9 +1,7 @@
 using Backend.Models;
 using Backend.Repositories;
-using Microsoft.Extensions.Logging;
 using NanoidDotNet;
-using System;
-using System.Threading.Tasks;
+using System.Text;
 
 namespace Backend.Services
 {
@@ -12,6 +10,9 @@ namespace Backend.Services
         private readonly ISnippetRepository _repository = repository;
         private readonly ILogger<SnippetService> _logger = logger;
 
+        // TODO: Use configuration for max size
+        private const int MAX_SIZE_KB = 64;
+        private const int MAX_SIZE_BYTES = MAX_SIZE_KB * 1024;
         public async Task<SnippetViewDTO?> GetSnippetAsync(string contentId)
         {
             Snippet? snippet = await _repository.GetByContentIdAsync(contentId);
@@ -33,6 +34,21 @@ namespace Backend.Services
 
         public async Task<(string contentId, SnippetDTO snippet)> CreateSnippetAsync(SnippetDTO snippetDTO)
         {
+
+            if (string.IsNullOrEmpty(snippetDTO.Content))
+            {
+                throw new ArgumentException("Content cannot be empty");
+            }
+
+            // Calculate the size of the encrypted content (base64 string)
+            var contentSizeBytes = Encoding.UTF8.GetByteCount(snippetDTO.Content);
+
+            if (contentSizeBytes > MAX_SIZE_BYTES)
+            {
+                var contentSizeKB = contentSizeBytes / 1024.0;
+                throw new ArgumentException($"Content size ({contentSizeKB:F1} KB) exceeds maximum allowed size of {MAX_SIZE_KB} KB");
+            }
+
             // Generate a unique ID
             string contentId = Nanoid.Generate(size: 12);
 

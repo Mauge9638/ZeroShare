@@ -1,11 +1,6 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+import type { CreateSnippetRequest } from '@/types/requestTypes'
 
-export interface CreateSnippetRequest {
-  content: string
-  iv: string
-  burnAfterRead?: boolean
-  expiresAt?: Date
-}
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 interface CreateSnippetApiPayload {
   content: string

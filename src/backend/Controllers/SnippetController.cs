@@ -37,7 +37,7 @@ public class SnippetController(ILogger<SnippetController> logger, ISnippetServic
     }
 
     [HttpPost(Name = "CreateSnippet")]
-    public async Task<ActionResult<SnippetDTO>> PostSnippet(SnippetDTO snippetDTO)
+    public async Task<ActionResult<SnippetDTO>> CreateSnippet(SnippetDTO snippetDTO)
     {
         if (snippetDTO == null)
         {
@@ -48,11 +48,15 @@ public class SnippetController(ILogger<SnippetController> logger, ISnippetServic
         {
             var (contentId, createdSnippetDTO) = await _snippetService.CreateSnippetAsync(snippetDTO);
 
-            return CreatedAtAction(nameof(GetSnippet), new { contentId }, contentId);
+            return Ok(contentId);
         }
-        catch
+        catch (ArgumentException ex)
         {
-            _logger.LogError("An error occurred while creating the snippet.");
+            return BadRequest(new { error = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while creating the snippet.");
             return StatusCode(500, "Internal server error while creating the snippet.");
         }
     }
